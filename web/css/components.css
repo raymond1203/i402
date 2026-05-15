@@ -1,0 +1,371 @@
+/* I402 — components */
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  height: 40px;
+  padding: 0 var(--space-16);
+  border-radius: var(--radius-button);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-default);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-whiteout);
+  transition: background-color 140ms ease, border-color 140ms ease, transform 80ms ease;
+}
+.btn:active { transform: translateY(1px); box-shadow: var(--shadow-pressed); }
+
+.btn-primary {
+  background: var(--color-forest-cta);
+  border-color: rgba(62, 207, 142, 0.3);
+  color: var(--color-whiteout);
+}
+.btn-primary:hover { background: #00733f; border-color: rgba(62, 207, 142, 0.55); }
+
+.btn-secondary {
+  background: var(--color-graphite-base);
+  border-color: var(--color-carbon-border);
+}
+.btn-secondary:hover { border-color: var(--color-iron-outline); background: #2a2a2a; }
+
+.btn-ghost { background: transparent; border-color: transparent; }
+.btn-ghost:hover { background: rgba(250, 250, 250, 0.04); }
+
+.btn-large { height: 48px; padding: 0 var(--space-24); font-size: var(--text-body); }
+
+.btn-pill {
+  border-radius: var(--radius-pill);
+  padding: var(--space-8) var(--space-32);
+  background: var(--color-ebony-canvas);
+  border-color: var(--color-steel-surface);
+  color: var(--color-whiteout);
+  font-size: var(--text-body-sm);
+}
+
+/* ---------- Inputs ---------- */
+.input {
+  display: block;
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-12);
+  background: rgba(250, 250, 250, 0.027);
+  color: var(--color-whiteout);
+  border: 1px solid var(--color-carbon-border);
+  border-radius: var(--radius-input);
+  font-size: var(--text-body);
+  font-family: inherit;
+  letter-spacing: var(--tracking-default);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.input::placeholder { color: var(--color-iron-outline); }
+.input:focus {
+  border-color: var(--color-supabase-green);
+  box-shadow: 0 0 0 3px rgba(62, 207, 142, 0.15);
+}
+
+.label {
+  display: block;
+  font-size: var(--text-caption);
+  color: var(--color-mid-gray-text);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: var(--space-8);
+  font-family: var(--font-mono);
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--surface-1);
+  border-radius: var(--radius-card);
+  padding: var(--space-24);
+}
+.card-bordered {
+  background: var(--surface-0);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: var(--space-24);
+}
+
+/* ---------- Pills / status ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  height: 24px;
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pill-active { background: rgba(0, 197, 115, 0.12); color: var(--color-supabase-green); border: 1px solid rgba(0, 197, 115, 0.3); }
+.pill-warn   { background: rgba(245, 158, 11, 0.12); color: var(--color-amber-warn); border: 1px solid rgba(245, 158, 11, 0.3); }
+.pill-alert  { background: rgba(239, 68, 68, 0.12); color: var(--color-red-alert); border: 1px solid rgba(239, 68, 68, 0.3); }
+.pill-dim    { background: var(--color-graphite-base); color: var(--color-mid-gray-text); border: 1px solid var(--color-carbon-border); }
+
+.pill-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* ---------- Banners ---------- */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  padding: var(--space-16) var(--space-24);
+  border-radius: var(--radius-card);
+  background: var(--surface-1);
+  border-left: 3px solid var(--color-supabase-green);
+}
+.banner-success { border-left-color: var(--color-supabase-green); }
+.banner-warn { border-left-color: var(--color-amber-warn); }
+.banner-alert { border-left-color: var(--color-red-alert); }
+.banner-title { font-size: var(--text-body); font-weight: var(--weight-medium); }
+.banner-body { font-size: var(--text-body-sm); color: var(--color-mid-gray-text); margin-top: 2px; }
+
+/* ---------- Top bar ---------- */
+.topbar {
+  height: var(--header-height);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-0);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-24);
+}
+.topbar-left { display: flex; align-items: center; gap: var(--space-16); }
+.topbar-right { display: flex; align-items: center; gap: var(--space-16); }
+
+.brand-mark {
+  font-size: var(--text-heading);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-tight);
+  cursor: pointer;
+  user-select: none;
+  line-height: 1;
+}
+.brand-mark .i {
+  color: var(--color-glow-green);
+  text-shadow: var(--shadow-glow-sm);
+  display: inline-block;
+}
+
+.user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  height: 32px;
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: var(--text-body-sm);
+  font-family: var(--font-mono);
+  color: var(--color-whiteout);
+}
+.user-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-supabase-green); }
+
+/* ---------- Footer ---------- */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-16) var(--space-24);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-iron-outline);
+  text-align: center;
+}
+
+/* ---------- Spinner ---------- */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: var(--color-supabase-green);
+  border-right-color: var(--color-supabase-green);
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* =====================================================================
+ * Stage 2 attacker chrome — Dashboard method card + Arena HUD chip
+ *
+ * Stage 2 is adaptive-only (see behavior_sim/attacker_agent.py): the
+ * attacker is a Claude LLM that adapts to refused patterns. We surface
+ * this with a single always-on red-coded chip rather than a toggle —
+ * there is no "off" state, the adaptive behaviour IS the system.
+ * ===================================================================== */
+
+/* ---- Dashboard Stage-2 method card --------------------------------- */
+.stage2-method {
+  margin-top: var(--space-24);
+  padding: var(--space-16) 20px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-16);
+  align-items: stretch;
+  border: 1px solid rgba(239,68,68,0.32);
+  border-radius: var(--radius-button);
+  background:
+    linear-gradient(180deg, rgba(239,68,68,0.08), rgba(239,68,68,0.02) 60%),
+    var(--surface-2);
+  box-shadow: 0 0 0 1px rgba(239,68,68,0.10) inset,
+              0 8px 28px -10px rgba(239,68,68,0.35);
+  position: relative;
+  overflow: hidden;
+}
+.stage2-method::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(239,68,68,0.07), transparent 60%);
+}
+.stage2-method-key {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: var(--color-red-alert);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  align-self: center;
+  padding-block: 4px;
+}
+.stage2-method-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.stage2-method-title {
+  font-size: var(--text-subheading);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-whiteout);
+  display: inline-flex; align-items: center; gap: var(--space-12);
+  margin: 0;
+}
+.stage2-method-tag {
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(239,68,68,0.14);
+  color: var(--color-red-alert);
+  border: 1px solid rgba(239,68,68,0.40);
+}
+.stage2-method-sub {
+  font-size: 12px;
+  color: var(--color-mid-gray-text);
+  letter-spacing: 0.01em;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ---- Arena HUD mode chip (always adaptive) ------------------------- */
+.hud-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: 6px 10px 6px 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(239,68,68,0.55);
+  background: rgba(58,14,14,0.5);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--color-red-alert);
+}
+.hud-mode .mode-pip {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--color-red-alert);
+  animation: mode-pip-pulse 1.6s ease-in-out infinite;
+}
+
+/* ---- Attacker memory counter (adaptive only) ----------------------- */
+.attacker-memory {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) scaleX(-1); /* parent attacker is mirrored */
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border: 1px solid rgba(239,68,68,0.5);
+  background: rgba(20,4,4,0.86);
+  backdrop-filter: blur(6px);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--color-red-alert);
+  white-space: nowrap;
+  box-shadow: 0 6px 14px -8px rgba(239,68,68,0.55);
+}
+.attacker-memory .memory-key { opacity: 0.8; }
+.attacker-memory .memory-divider { color: rgba(239,68,68,0.55); }
+.attacker-memory .memory-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+}
+.attacker-memory .memory-pulse {
+  position: absolute;
+  inset: -1px;
+  border-radius: 3px;
+  border: 1px solid var(--color-red-alert);
+  pointer-events: none;
+  opacity: 0;
+}
+.attacker-memory.is-bumped .memory-pulse {
+  animation: memory-flare 700ms ease-out;
+}
+.attacker-memory.is-bumped .memory-value {
+  animation: memory-bump 320ms cubic-bezier(0.2,0.8,0.2,1);
+}
+
+/* ---- Attacker "thinking" pre-roll (adaptive only) ------------------- */
+.attacker-think {
+  position: absolute;
+  bottom: calc(100% - 4px);
+  left: calc(50% - 18px);
+  transform: scaleX(-1);
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(58,14,14,0.72);
+  border: 1px solid rgba(239,68,68,0.4);
+}
+.attacker-think .think-dot {
+  width: 4px; height: 4px;
+  background: var(--color-red-alert);
+  border-radius: 50%;
+  display: inline-block;
+  animation: think-blink 900ms infinite;
+}
+.attacker-think .think-dot:nth-child(2) { animation-delay: 150ms; }
+.attacker-think .think-dot:nth-child(3) { animation-delay: 300ms; }
+
+/* ---- Result-screen mode footnote ----------------------------------- */
+.result-mode {
+  margin-top: var(--space-16);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--color-mid-gray-text);
+  display: inline-flex; gap: var(--space-8); align-items: center;
+}
+.result-mode-key { color: var(--color-iron-outline); }
+.result-mode-val {
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(239,68,68,0.40);
+  background: rgba(239,68,68,0.06);
+  color: var(--color-red-alert);
+}

@@ -1,14 +1,36 @@
-"""Stage 3 — rule-based verdict layer.
+"""Stage 3 — Li 2026 Corollary 10 verdict gate.
 
-Takes Stage 1 protocol outcomes + (optional) Stage 2 behavioral outcomes
-per agent, applies paper-anchored thresholds, emits PASS / CONDITIONAL /
-DECLINE plus the list of failed vectors.
+Takes Stage 1 protocol outcomes + Stage 2 behavioral outcomes per agent,
+applies the ε_target(c_tx) AND-gate over the 4 Class A perils, emits
+PASS / DECLINE. Class B perils flow only to pricing.
 
-No ML — the user explicitly chose option "A" on 2026-05-14: with the
-full simulation in hand, a thresholded rule is sufficient.
+See `docs/THRESHOLDS_AND_PREMIUM.md` §1 for the decision rule and the
+external anchor.
 """
 
-from .thresholds import THRESHOLDS, Severity
-from .verdict import VectorVerdict, Verdict, apply_verdict
+from .thresholds import (
+    CLASS_A_PERILS,
+    CLASS_B_PERILS,
+    EPSILON_HIGH,
+    EPSILON_LOW,
+    METRIC_PATH,
+    N_FOR_WILSON,
+    PerilGateResult,
+    epsilon_target,
+    normalize_rate,
+)
+from .verdict import Verdict, apply_verdict
 
-__all__ = ["THRESHOLDS", "Severity", "VectorVerdict", "Verdict", "apply_verdict"]
+__all__ = [
+    "CLASS_A_PERILS",
+    "CLASS_B_PERILS",
+    "EPSILON_HIGH",
+    "EPSILON_LOW",
+    "METRIC_PATH",
+    "N_FOR_WILSON",
+    "PerilGateResult",
+    "Verdict",
+    "apply_verdict",
+    "epsilon_target",
+    "normalize_rate",
+]

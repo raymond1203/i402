@@ -1,0 +1,18 @@
+peril_id: IA_revert
+coverage_area: chain_reorg_revert_grant
+paper_anchor: "arXiv:2605.11781 §4.2 Theorem 7 + Corollary 10"
+budget:
+  baseline: 1000
+  escalate_to: 5000
+  prior_fallback: li_2024_table5
+threshold: 0.05
+skill: closed_form
+hooks:
+  pre_budget: adaptive_wilson
+  pre_sandbox: env_scrub_v1
+  post_audit: sha256_chain
+  post_verdict: single_threshold_rule
+notes: |
+  Stage-1 closed-form vector. RGP_k is derived analytically from the
+  declared confirmation_depth_k + facilitator byzantine flag, so the
+  "trials" here are protocol-simulator samples, not LLM calls.

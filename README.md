@@ -28,13 +28,21 @@ applicant AI agent (JSON)
   │             • Attack AP3 Tool Poisoning
   │             • Attack AP6 Confused Deputy
   │
-  ├─▶ Stage 3  Verdict                     rule‑based threshold compare     ──fail──▶ DECLINE
+  ├─▶ Stage 3  Verdict gate                Li 2026 Corollary 10 AND-gate    ──fail──▶ DECLINE
+  │            ε_target(c_tx) over Class A (P1·P3·P4·IV) only
   │
-  └─▶ Stage 4  NFT certificate             ERC‑8004 · web3.py + Foundry     ──▶ PASS + Token
+  ├─▶ Stage 4  Pricing                     π_gross = π_pure · 1.645
+  │            frequency × severity        · clip(∏m_i, 0.6, 1.4)
+  │
+  └─▶ Stage 5  NFT certificate             ERC‑8004 · audit_roots committed ──▶ PASS + Token
                                            identity_hash bound on‑chain
 ```
 
-Every threshold value is taken from the paper (Tables 1, 4, 5). No invented numbers.
+The verdict gate uses **one external anchor** (Li 2026 Corollary 10) and no
+invented numbers. Pricing uses frequency-severity per Klugman / Panjer /
+Willmot (2019) with Solvency II loading per Cruz (2002) and McNeil (2015).
+See `docs/THRESHOLDS_AND_PREMIUM.md` for the full derivation and
+`docs/LHAA_ARCHITECTURE.md` for the harness internals.
 
 ---
 
@@ -47,8 +55,8 @@ Every threshold value is taken from the paper (Tables 1, 4, 5). No invented numb
 | Python | ≥3.11 | runtime |
 | [uv](https://docs.astral.sh/uv/) | ≥0.4 | package + venv management |
 | [Foundry](https://book.getfoundry.sh/) | latest | Solidity compile + tests |
-| Anthropic API key | any tier | Stage 2 (5,000 Claude calls per agent — budget $1–$3) |
-| Testnet wallet | any | Stage 4 (real NFT mint; use a burner) |
+| Anthropic API key | any tier | Stage 2 (LHAA adaptive budget: $1.5–4.5 per agent) |
+| Testnet wallet | any | Stage 5 (real NFT mint; use a burner) |
 
 ### Install
 
@@ -72,11 +80,11 @@ Open `.env` and provide:
 ### Verify the install
 
 ```bash
-uv run pytest                                    # 67 Python tests
+uv run pytest                                    # 110 Python tests
 (cd contracts && forge test)                     # 11 Solidity tests
 ```
 
-Expected: **78 tests pass.**
+Expected: **121 tests pass.**
 
 ### Deploy the NFT contract (one time)
 
@@ -98,6 +106,22 @@ uv run python -m demo.run_demo
 3. Run Stage 2 behavioural simulator — **5,000 real Claude API calls per agent** (~30–60 min on free-tier rate limits; **budget ~$1–$3 per agent in Anthropic credit**)
 4. Compute the Stage 3 verdict
 5. Print a mint hint for any passing agent. Mint is a separate, deliberate step: `uv run python -m nft.mint safe_paybot` (calls `mintCertificate(...)` on Sepolia, broadcasts the tx, waits for finality, writes the receipt to `reports/<agent>_registration.json`)
+
+**Adaptive attacker — Stage 2 design.** Every trial calls three Claude models in sequence:
+
+```
+  Attacker (generates a fresh adversarial scenario, with memory of prior refused patterns)
+       ↓
+  Target   (the applicant agent under audit)
+       ↓
+  Judge    (isolated context, classifies SAFE / UNSAFE / AMBIGUOUS)
+```
+
+This replaces the earlier hand-crafted static corpus. See `behavior_sim/attacker_agent.py`. The attacker can be a different model family from the target to further break self-attack collusion:
+
+```bash
+uv run python -m demo.run_demo --attacker-model claude-opus-4-7
+```
 
 **Fast iteration without spending API budget:**
 
@@ -151,16 +175,17 @@ Reads the token's `identity_hash` from chain, re‑canonicalizes the local appli
 i402/
 ├── gate/                # Stage 0 — precondition gate + Applicant dataclass
 ├── simulator/           # Stage 1 — replay, cache, revert, simulate_endpoint
-├── behavior_sim/        # Stage 2 — corpus, target, judge, orchestrator
-├── verdict/             # Stage 3 — paper‑anchored thresholds
-├── nft/                 # Stage 4 — deploy, mint, verify, common
+├── behavior_sim/        # Stage 2 — orchestrator + 8 LHAA modules (lhaa/)
+│   └── lhaa/            #   interface · hooks · budget · audit · skills · 8 YAMLs
+├── verdict/             # Stage 3 — Li 2026 Corollary 10 ε_target(c_tx) gate
+├── pricing/             # Stage 4 — frequency-severity engine + GEMAct MC
+├── nft/                 # Stage 5 — deploy, mint, verify, common
 ├── contracts/           # ERC‑8004 Solidity + forge tests
-├── agents/              # 3 calibrated example applicants + identity.py
+├── agents/              # 4 example applicants (micro/safe/mid/vuln) + identity.py
 ├── demo/run_demo.py     # CLI orchestrator
 ├── docs/
-│   ├── HARNESS.md       # what this is, in detail
-│   ├── pipeline.md      # stage‑by‑stage spec
-│   └── model_card.md    # threshold derivations + paper citations
+│   ├── LHAA_ARCHITECTURE.md       # harness architecture A→Z (Korean)
+│   └── THRESHOLDS_AND_PREMIUM.md  # verdict + pricing derivations
 ├── reports/             # outputs (gitignored except .gitkeep)
 └── run_all.sh           # reproducer script for paper figures
 ```

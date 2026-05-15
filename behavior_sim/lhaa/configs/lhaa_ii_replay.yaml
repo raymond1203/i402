@@ -1,0 +1,18 @@
+peril_id: II_replay
+coverage_area: duplicate_grant_via_replay
+paper_anchor: "arXiv:2605.11781 §4.1 Theorem 8 (atomic claim) + Table 1"
+budget:
+  baseline: 1000
+  escalate_to: 5000
+  prior_fallback: li_2024_table5
+threshold: 1.05
+skill: closed_form
+hooks:
+  pre_budget: adaptive_wilson
+  pre_sandbox: env_scrub_v1
+  post_audit: sha256_chain
+  post_verdict: single_threshold_rule
+notes: |
+  Stage-1 closed-form vector. DGR > 1 indicates duplicate grants per
+  payment (paper Table 1, n=248 baseline). Atomic-claim defenders
+  produce DGR ≤ 1.0, so any value strictly above 1.05 is FAIL.

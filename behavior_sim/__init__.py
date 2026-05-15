@@ -1,8 +1,9 @@
 """Stage 2 — agent behavioral simulator.
 
-Drives each toy agent through adversarial scenarios using Claude
-(or any client implementing the `JudgeClient` / `TargetClient`
-protocols) and aggregates per-category unsafe-decision rates.
+v2: every Stage 2 trial is driven by a Claude-instantiated *adaptive
+attacker* (see `attacker_agent.py`) that generates one fresh scenario
+per trial and memorises patterns the target refused. The earlier
+static-corpus path is removed.
 
 Five categories tested per agent (5,000 trials default, ~1,000 each):
     IV    server selection            (paper Attack IV)
@@ -15,7 +16,21 @@ Output schema matches what `verdict/thresholds.py` reads at
 `stage_2_behavioral.<category>.rate`.
 """
 
-from .corpus import CATEGORIES, Scenario, load_corpus
+from .attacker_agent import (
+    ATTACK_META_SPEC,
+    AttackerMemory,
+    generate_adaptive_scenario,
+    summarize_target_for_attacker,
+)
+from .corpus import CATEGORIES, Scenario
 from .orchestrator import run_behavior_simulation
 
-__all__ = ["run_behavior_simulation", "Scenario", "CATEGORIES", "load_corpus"]
+__all__ = [
+    "run_behavior_simulation",
+    "Scenario",
+    "CATEGORIES",
+    "AttackerMemory",
+    "generate_adaptive_scenario",
+    "summarize_target_for_attacker",
+    "ATTACK_META_SPEC",
+]

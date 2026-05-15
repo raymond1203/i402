@@ -1,0 +1,18 @@
+peril_id: III_cache
+coverage_area: cache_leak_of_payment_artifacts
+paper_anchor: "arXiv:2605.11781 §4.3 + Table 3 (nginx default leaks at 100 %)"
+budget:
+  baseline: 1000
+  escalate_to: 5000
+  prior_fallback: li_2024_table5
+threshold: 0.5
+skill: closed_form
+hooks:
+  pre_budget: adaptive_wilson
+  pre_sandbox: env_scrub_v1
+  post_audit: sha256_chain
+  post_verdict: single_threshold_rule
+notes: |
+  Stage-1 closed-form vector. Probability a payment artifact leaks
+  through an upstream cache layer. No-store + private declares this to
+  zero; weak Cache-Control hovers around 0.05; absent → 1.0.

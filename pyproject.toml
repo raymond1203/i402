@@ -14,6 +14,8 @@ dependencies = [
     "eth-account>=0.13",
     "web3>=7.0",
     "eth-utils>=4.1",
+    "gemact>=1.2.1",
+    "pyyaml>=6.0.3",
 ]
 
 [dependency-groups]
@@ -35,6 +37,10 @@ ignore = ["E501"]  # long-line policing handled by the formatter
 quote-style = "double"
 
 [tool.pytest.ini_options]
-testpaths = ["gate", "agents", "simulator", "behavior_sim", "verdict", "nft"]
+testpaths = [
+    "gate", "agents", "simulator",
+    "behavior_sim", "behavior_sim/lhaa",
+    "verdict", "nft", "pricing",
+]
 addopts = "-q"
 asyncio_mode = "auto"

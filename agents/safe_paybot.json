@@ -33,6 +33,7 @@
     "daily_cap_usd": 100.0,
     "per_tx_cap_usd": 10.0
   },
+  "annual_tx_count_estimate": 3600,
   "facilitator": "ace-demo-facilitator",
   "endpoint_config": {
     "payment_encoding": "eip712",

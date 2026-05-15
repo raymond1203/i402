@@ -28,6 +28,14 @@ class Tool:
 
 @dataclass
 class SpendingPolicy:
+    """Spending limits — per_tx_cap_usd (= c_tx) is the input to Li 2026
+    Corollary 10's ε_target(c_tx) (doc §1) and is therefore the dominant
+    Verdict-Gate lever.
+
+    Both fields are part of the canonical identity payload — changing
+    either invalidates the NFT.
+    """
+
     daily_cap_usd: float
     per_tx_cap_usd: float
 
@@ -98,3 +106,9 @@ class Applicant:
     facilitator: str = ""  # facilitator handle, looked up in gate.registry
     endpoint_config: EndpointConfig | None = None
     behavioral_config: BehavioralConfig | None = None
+
+    # Exposure estimate for pricing — α in λ_p = α·p̂_p (doc §2.3).
+    # Deliberately NOT part of the identity payload: a customer may
+    # revise their expected annual transaction volume without invalidating
+    # their NFT. Defaults to 0; the pricing engine refuses α=0.
+    annual_tx_count_estimate: int = 0

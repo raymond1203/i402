@@ -1,0 +1,108 @@
+/* I402 — animation keyframes used across the app */
+
+/* shake (wrong creds) */
+@keyframes shake-x {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.shake { animation: shake-x 400ms ease; }
+
+/* fade-in */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up { animation: fade-in-up 420ms ease both; }
+
+/* glow pulse for I letter (steady-state, after intro) */
+@keyframes glow-pulse {
+  0%, 100% { text-shadow: 0 0 8px rgba(0, 197, 115, 0.5), 0 0 18px rgba(0, 197, 115, 0.3); }
+  50%      { text-shadow: 0 0 16px rgba(0, 197, 115, 0.7), 0 0 32px rgba(0, 197, 115, 0.4); }
+}
+.glow-pulse { animation: glow-pulse 2.4s ease-in-out infinite; }
+
+/* sparkle drift (used by intro) */
+@keyframes sparkle-drift {
+  0%   { opacity: 0; transform: translate(0,0) rotate(0); }
+  10%, 70% { opacity: 0.65; }
+  100% { opacity: 0; transform: translate(120px, -40px) rotate(180deg); }
+}
+
+/* particle burst (winner confetti) */
+@keyframes particle-arc {
+  0%   { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  20%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--px, 80px), var(--py, -120px)) scale(1); }
+}
+
+/* RGB-split glitch (DEFEAT) */
+@keyframes rgb-split {
+  0%, 100% { text-shadow: 2px 0 var(--color-red-alert), -2px 0 cyan; }
+  25% { text-shadow: -3px 0 var(--color-red-alert), 3px 0 cyan; }
+  50% { text-shadow: 4px 0 var(--color-red-alert), -4px 0 cyan; }
+  75% { text-shadow: -2px 0 var(--color-red-alert), 2px 0 cyan; }
+}
+@keyframes judder {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-3px); }
+  20% { transform: translateX(3px); }
+  30% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+}
+
+/* screen shake (arena impact) */
+@keyframes shake-arena {
+  0%, 100% { transform: translate(0,0); }
+  20% { transform: translate(-3px, 1px); }
+  40% { transform: translate(3px, -1px); }
+  60% { transform: translate(-2px, 1px); }
+  80% { transform: translate(2px, -1px); }
+}
+.arena-shake { animation: shake-arena 260ms ease; }
+
+/* radial pulse */
+@keyframes radial-pulse {
+  0%   { transform: translate(-50%,-50%) scale(0.2); opacity: 0.9; }
+  100% { transform: translate(-50%,-50%) scale(2.4); opacity: 0;   }
+}
+
+/* counter pop */
+@keyframes pop-in {
+  0%  { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---- Adaptive-attacker mode animations ------------------------------ */
+
+/* Soft pulse on the HUD mode-chip pip while adaptive is engaged. */
+@keyframes mode-pip-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0   rgba(239,68,68,0.55),
+                0 0 0 0   rgba(239,68,68,0.30);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.00),
+                0 0 0 8px rgba(239,68,68,0.00);
+  }
+}
+
+/* Memory counter bump on each increment (target SAFE-refused last trial). */
+@keyframes memory-bump {
+  0%   { transform: translateY(0) scale(1);    color: var(--color-whiteout); }
+  40%  { transform: translateY(-4px) scale(1.32); color: var(--color-red-alert); }
+  100% { transform: translateY(0) scale(1);    color: var(--color-red-alert); }
+}
+@keyframes memory-flare {
+  0%   { opacity: 0.9; transform: scale(1);    }
+  100% { opacity: 0;   transform: scale(1.18); }
+}
+
+/* Attacker "thinking" — Claude-driven adaptive scenario crafting. */
+@keyframes think-blink {
+  0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+  40%           { opacity: 1;    transform: translateY(-2px); }
+}

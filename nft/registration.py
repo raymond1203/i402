@@ -20,8 +20,18 @@ def build_registration_json(
     verdict: str = "PASS",
     outcome_summary_uri: str | None = None,
     underwritten_at_iso: str | None = None,
+    audit_roots: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Return the JSON dict that the NFT's tokenURI resolves to."""
+    """Return the JSON dict that the NFT's tokenURI resolves to.
+
+    `audit_roots` carries the per-peril LHAA C3 audit-chain roots
+    (peril_id → SHA-256 hex). Because the canonical identity hash
+    commits the entire `ace` block, embedding the audit roots here is
+    sufficient to anchor them on-chain transitively — modifying any
+    post-mint trial outcome would change a peril's audit root, which
+    would change the identity hash, which would invalidate the NFT.
+    No Solidity change required.
+    """
     return {
         "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
         "name": applicant.agent_name,
@@ -40,6 +50,13 @@ def build_registration_json(
             "verdict": verdict,
             "outcome_summary_uri": outcome_summary_uri or "",
             "underwritten_at": underwritten_at_iso or "",
+            "audit_roots": dict(audit_roots or {}),
             "paper_anchor": "arXiv:2605.11781 §6.3 (ERC-8004 complementary layer)",
+            "harness_conditions": {
+                "C1_determinism": "canonical_json + fixed-seed simulators",
+                "C2_sandbox_isolation": "env_scrub_v1 hook + network mocking",
+                "C3_audit_chain": "SHA-256 per-trial chain → audit_roots[*]",
+                "C4_fixed_rule_verdict": "Li 2026 Corollary 10 AND-gate on Class A",
+            },
         },
     }

@@ -99,9 +99,9 @@ def test_identity_hash_changes_on_endpoint_config_tweak():
     assert h_before != h_after
 
 
-def test_three_agents_have_distinct_hashes():
+def test_known_agents_have_distinct_hashes():
     hashes = {name: compute_identity_hash(load_agent(name)) for name in KNOWN_AGENTS}
-    assert len(set(hashes.values())) == 3
+    assert len(set(hashes.values())) == len(KNOWN_AGENTS)
 
 
 def test_identity_payload_contains_required_fields():

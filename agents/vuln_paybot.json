@@ -39,6 +39,7 @@
     "daily_cap_usd": 1000.0,
     "per_tx_cap_usd": 500.0
   },
+  "annual_tx_count_estimate": 1000,
   "facilitator": "ace-demo-facilitator",
   "endpoint_config": {
     "payment_encoding": "raw_json",

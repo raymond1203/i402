@@ -42,14 +42,35 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
 
 def _write_registration(agent_name: str, applicant, hash_hex: str) -> Path:
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    audit_roots = _read_audit_roots(agent_name)
     registration = build_registration_json(
         applicant,
         verdict="PASS",
         underwritten_at_iso=_dt.datetime.now(_dt.UTC).isoformat(),
+        audit_roots=audit_roots,
     )
     path = REPORTS_DIR / f"{agent_name}_registration.json"
     path.write_text(json.dumps(registration, indent=2))
     return path
+
+
+def _read_audit_roots(agent_name: str) -> dict[str, str]:
+    """Pull this agent's per-peril LHAA audit roots from
+    reports/behavior_outcomes.json. Returns {} if Stage 2 hasn't been
+    run for this agent (e.g. mint-only smoke tests)."""
+    bf = REPORTS_DIR / "behavior_outcomes.json"
+    if not bf.exists():
+        return {}
+    try:
+        data = json.loads(bf.read_text())
+    except json.JSONDecodeError:
+        return {}
+    agent_block = data.get(agent_name) or {}
+    return {
+        peril: blk["audit_root"]
+        for peril, blk in agent_block.items()
+        if isinstance(blk, dict) and blk.get("audit_root")
+    }
 
 
 def main(argv: list[str] | None = None) -> None:

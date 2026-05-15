@@ -1,0 +1,85 @@
+/* I402 — design tokens
+ * Supabase-inspired dark palette. Two hex typos in the source spec
+ * (#3ecf8, #2e2e2) are corrected here to valid 6-digit values.
+ */
+
+:root {
+  /* ---------- Colors ---------- */
+  --color-midnight-abyss:        #000000;
+  --color-ebony-canvas:          #121212;
+  --color-graphite-base:         #242424;
+  --color-steel-surface:         #2e2e2e;
+  --color-carbon-border:         #393939;
+  --color-iron-outline:          #4d4d4d;
+  --color-mid-gray-text:         #898989;
+  --color-silver-highlight:      #b4b4b4;
+  --color-whiteout:              #fafafa;
+  --color-supabase-green:        #3ecf8e;
+  --color-deep-sea-green:        #1f4b37;
+  --color-forest-cta:            #006239;
+  --color-glow-green:            #00c573;
+  --color-shadow-green:          #002918;
+
+  /* states */
+  --color-amber-warn:            #f59e0b;
+  --color-red-alert:             #ef4444;
+
+  /* ---------- Typography ---------- */
+  --font-circular: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono:     'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --text-caption:     12px;  --lh-caption: 1.56;
+  --text-body-sm:     14px;  --lh-body-sm: 1.5;
+  --text-body:        16px;  --lh-body:    1.43;
+  --text-subheading:  18px;  --lh-subheading: 1.38;
+  --text-heading:     24px;  --lh-heading: 1.33;
+  --text-heading-lg:  36px;  --lh-heading-lg: 1.25;
+  --text-display:     72px;  --lh-display: 1.05;
+  --text-mega:        96px;  --lh-mega:    1.0;
+
+  --tracking-default: -0.007em;
+  --tracking-tight:   -0.04em;
+  --tracking-wide:    0.2em;
+
+  --weight-thin:    200;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-bold:    700;
+  --weight-black:   900;
+
+  /* ---------- Spacing (8px grid) ---------- */
+  --space-4:   4px;
+  --space-8:   8px;
+  --space-12:  12px;
+  --space-16:  16px;
+  --space-24:  24px;
+  --space-32:  32px;
+  --space-40:  40px;
+  --space-48:  48px;
+  --space-64:  64px;
+  --space-80:  80px;
+  --space-96:  96px;
+  --space-128: 128px;
+
+  /* ---------- Radii ---------- */
+  --radius-input:  6px;
+  --radius-button: 6px;
+  --radius-card:   16px;
+  --radius-pill:   9999px;
+
+  /* ---------- Glow / shadows ---------- */
+  --shadow-pressed: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.1) 0px 2px 4px -2px;
+  --shadow-glow-sm: 0 0 12px rgba(0, 197, 115, 0.45);
+  --shadow-glow-md: 0 0 24px rgba(0, 197, 115, 0.55), 0 0 48px rgba(62, 207, 142, 0.25);
+  --shadow-glow-lg: 0 0 32px rgba(0, 197, 115, 0.65), 0 0 64px rgba(62, 207, 142, 0.35), 0 0 128px rgba(62, 207, 142, 0.15);
+
+  /* ---------- Surfaces (semantic) ---------- */
+  --surface-0: var(--color-ebony-canvas);   /* page bg */
+  --surface-1: var(--color-steel-surface);  /* elevated card */
+  --surface-2: var(--color-graphite-base);  /* input bg, secondary button */
+  --border:    var(--color-carbon-border);
+
+  /* layout */
+  --max-width: 1200px;
+  --header-height: 64px;
+}

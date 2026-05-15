@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>I402</title>
+  <meta name="description" content="I402 — agentic-commerce insurance on top of the x402 payment protocol." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;700;900&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/screens.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- Sticky top bar (hidden until intro completes) -->
+    <header class="topbar hidden" id="topbar">
+      <div class="topbar-left">
+        <div class="brand-mark" id="brandLogo" title="Replay intro"><span class="i glow-pulse">I</span>402</div>
+        <span class="uppercase-wide muted">agentic commerce endorsement</span>
+      </div>
+      <div class="topbar-right">
+        <span class="user-pill" id="userPill" hidden><span class="dot"></span><span class="mono">GAIP</span></span>
+        <button class="btn btn-ghost" id="logoutBtn" hidden>Sign out</button>
+      </div>
+    </header>
+
+    <main class="screen-stack">
+
+      <!-- ============= SPLASH (intro morph + login) ============= -->
+      <section class="screen splash" id="screen-splash" data-screen="splash">
+        <!-- intro morph stage -->
+        <div class="intro-stage" id="introStage" data-phase="0">
+          <div class="sparkles" aria-hidden="true">
+            <span class="sparkle s1"></span>
+            <span class="sparkle s2"></span>
+            <span class="sparkle s3"></span>
+          </div>
+          <h1 class="intro-phrase" id="introPhrase" aria-hidden="true">
+            <span class="word w-x402" data-w="x402"><span class="x">X</span><span class="rest402">402</span></span>
+            <span class="word w-insurance" data-w="insurance">
+              <span class="i" id="flyingI">I</span><span class="ns">nsurance</span>
+            </span>
+            <span class="word w-with" data-w="with">with</span>
+            <span class="word w-aiagent" data-w="aiagent">AI&nbsp;agent</span>
+          </h1>
+          <h1 class="intro-brand" id="introBrand" hidden>
+            <span class="brand-i" id="brandI">I</span><span class="brand-402">402</span>
+          </h1>
+          <p class="intro-tagline" id="introTagline" hidden>insurance with AI agent</p>
+          <button class="btn btn-ghost intro-skip" id="introSkip">Skip ↵</button>
+        </div>
+
+        <!-- login form (hidden during intro) -->
+        <div class="login-card" id="loginCard" hidden>
+          <p class="uppercase-wide muted">underwriting console — sign in</p>
+          <h2 class="login-title">Welcome.</h2>
+          <form class="login-form" id="loginForm" autocomplete="off">
+            <div>
+              <label class="label" for="loginUser">User ID</label>
+              <input class="input" id="loginUser" name="user" placeholder="" />
+            </div>
+            <div>
+              <label class="label" for="loginPass">Passcode</label>
+              <input class="input" id="loginPass" name="pass" type="password" placeholder="" />
+            </div>
+            <p class="login-error mono" id="loginError" hidden>Invalid credentials — try the hint below.</p>
+            <button class="btn btn-primary btn-large" type="submit">Authenticate</button>
+          </form>
+          <p class="login-hint mono muted">demo credentials &nbsp;·&nbsp; id: <span class="hint-strong">GAIP</span> &nbsp;·&nbsp; pw: <span class="hint-strong">2026</span></p>
+        </div>
+      </section>
+
+      <!-- ============= POST-LOGIN (tutorial chooser) ============= -->
+      <section class="screen post-login" id="screen-postlogin" data-screen="postlogin">
+        <div class="centered-card">
+          <p class="uppercase-wide muted">welcome, gaip</p>
+          <h2 class="big-heading">Pick how you want to begin.</h2>
+          <p class="muted lead">First time here? The guided tutorial walks the entire underwriting flow — from agent upload to NFT issuance to insurance enrollment. Skip if you'd rather click through it yourself.</p>
+          <div class="cta-row">
+            <button class="btn btn-primary btn-large" id="startTutorialBtn">Start Tutorial</button>
+            <button class="btn btn-secondary btn-large" id="skipTutorialBtn">Skip — go to console</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============= DASHBOARD (agent slot) ============= -->
+      <section class="screen dashboard" id="screen-dashboard" data-screen="dashboard">
+        <div class="dashboard-grid">
+          <div class="card-bordered agent-slot" id="agentSlot">
+            <p class="uppercase-wide muted">applicant agent slot</p>
+            <div class="agent-loaded" id="agentLoaded">
+              <div class="agent-loaded-head">
+                <div>
+                  <p class="uppercase-wide muted">currently loaded</p>
+                  <h3 class="agent-name mono" id="loadedAgentName">—</h3>
+                </div>
+                <span class="pill pill-dim" id="loadedAgentRisk">RISK: —</span>
+              </div>
+              <dl class="agent-meta">
+                <div><dt>model</dt><dd class="mono" id="loadedModel">—</dd></div>
+                <div><dt>identity hash</dt><dd class="mono trunc" id="loadedHash">—</dd></div>
+                <div><dt>facilitator</dt><dd class="mono" id="loadedFacilitator">—</dd></div>
+                <div><dt>wallet</dt><dd class="mono trunc" id="loadedWallet">—</dd></div>
+              </dl>
+
+              <!-- Stage 2 method card — informational. Stage 2 always runs
+                   the adaptive attacker pipeline in v2. -->
+              <div class="stage2-method">
+                <span class="stage2-method-key mono">STAGE 2</span>
+                <div class="stage2-method-body">
+                  <p class="stage2-method-title">
+                    Adaptive attacker
+                    <span class="stage2-method-tag mono">LIVE</span>
+                  </p>
+                  <p class="stage2-method-sub mono">
+                    attacker → target → judge · three Claude calls per trial · attacker
+                    memorises every pattern the target refuses
+                  </p>
+                </div>
+              </div>
+
+              <div class="agent-actions">
+                <button class="btn btn-primary" id="startReviewBtn" data-tutorial-target="startReview">Start Review →</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="card-bordered policy-card" id="policyCard">
+            <p class="uppercase-wide muted">policy</p>
+            <div class="policy-empty" id="policyEmpty">
+              <p class="muted">No active policy. Complete underwriting to enroll.</p>
+            </div>
+            <div class="policy-active" id="policyActive" hidden>
+              <div class="policy-head">
+                <span class="pill pill-active" id="policyStatusPill"><span class="pill-dot"></span>ACTIVE</span>
+                <span class="mono muted" id="policyNumber">#ACE-2026-0001</span>
+              </div>
+              <p class="policy-premium"><span class="mono dim">premium</span> <span class="mono"><span id="policyPremium">42</span> USDC / mo</span></p>
+              <p class="policy-coverage"><span class="mono dim">re-cert</span> <span class="mono" id="policyCountdown">180 days remaining</span></p>
+              <div class="policy-actions">
+                <button class="btn btn-ghost" id="fastForwardBtn">⏩ Fast-forward 6mo (debug)</button>
+                <button class="btn btn-secondary" id="recertifyBtn">Re-certify now</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ============= ARENA (LLM attack animation) ============= -->
+      <section class="screen arena" id="screen-arena" data-screen="arena">
+        <div class="arena-hud-top">
+          <div class="hud-left">
+            <span class="uppercase-wide muted">underwriting · stress test</span>
+            <h3 class="hud-title">LLM ATTACK IN PROGRESS</h3>
+          </div>
+          <div class="hud-mode" id="hudMode">
+            <span class="mode-pip" aria-hidden="true"></span>
+            <span class="mode-pip-label mono">ADAPTIVE ATTACKER</span>
+          </div>
+          <div class="hud-vector" id="hudVector">
+            <span class="vector-label mono">VECTOR</span>
+            <span class="vector-name" id="vectorName">—</span>
+          </div>
+          <button class="btn btn-ghost arena-skip" id="arenaSkip">Skip ↵</button>
+        </div>
+
+        <div class="arena-stage" id="arenaStage">
+          <div class="arena-bg-grid" aria-hidden="true"></div>
+          <div class="arena-character defender" id="defender">
+            <!-- defender svg injected by JS -->
+          </div>
+          <div class="arena-character attacker" id="attacker">
+            <!-- attacker svg injected by JS -->
+            <div class="attacker-memory" id="attackerMemory">
+              <span class="memory-key mono">MEMORY</span>
+              <span class="memory-divider" aria-hidden="true">·</span>
+              <span class="memory-value mono" id="attackerMemoryValue">0</span>
+              <span class="memory-pulse" aria-hidden="true"></span>
+            </div>
+            <div class="attacker-think" id="attackerThink" hidden aria-hidden="true">
+              <span class="think-dot"></span>
+              <span class="think-dot"></span>
+              <span class="think-dot"></span>
+            </div>
+          </div>
+          <div class="arena-fx" id="arenaFx"></div>
+        </div>
+
+        <div class="arena-hud-bottom">
+          <div class="vector-ticker" id="vectorTicker">
+            <span class="vt-item" data-key="II">II Replay</span>
+            <span class="vt-item" data-key="III">III Cache</span>
+            <span class="vt-item" data-key="IA">I-A Revert</span>
+            <span class="vt-item" data-key="IV">IV Selection</span>
+            <span class="vt-item" data-key="AP1">AP1 Injection</span>
+            <span class="vt-item" data-key="AP3">AP3 Tool Poison</span>
+            <span class="vt-item" data-key="AP6">AP6 Confused Deputy</span>
+          </div>
+          <div class="score-bar">
+            <div class="score-bar-track">
+              <div class="score-bar-fill" id="scoreFill"></div>
+              <div class="score-threshold" title="any failed vector → DECLINE"></div>
+            </div>
+            <span class="mono muted score-label"><span id="scoreLabel">0</span> / 7 vectors failed · any failure ⇒ DECLINE</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============= RESULT (DEFEAT / WINNER) ============= -->
+      <section class="screen result" id="screen-result" data-screen="result">
+        <div class="result-stage" id="resultStage">
+          <h1 class="result-headline" id="resultHeadline">WINNER</h1>
+          <p class="result-sub mono muted" id="resultSub">all paper-anchored thresholds cleared</p>
+          <p class="result-mode mono" id="resultMode" hidden>
+            <span class="result-mode-key">stress-tested against</span>
+            <span class="result-mode-val" id="resultModeVal">adaptive attacker</span>
+          </p>
+          <div class="confetti" id="confetti" aria-hidden="true"></div>
+          <div class="result-actions">
+            <button class="btn btn-secondary" id="resultBackBtn">Back to dashboard</button>
+            <button class="btn btn-primary" id="resultNextBtn">Check Monthly Premium →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============= PREMIUM ============= -->
+      <section class="screen premium" id="screen-premium" data-screen="premium">
+        <div class="centered-card">
+          <p class="uppercase-wide muted">your monthly premium</p>
+          <h2 class="big-heading">Underwriting passed — here's your quote.</h2>
+          <div class="premium-counter" id="premiumCounter">
+            <span class="premium-currency">$</span><span class="premium-amount mono" id="premiumAmount">0</span><span class="premium-unit">/mo</span>
+          </div>
+          <p class="muted">Premium derives from your agent's risk profile (DGR, cache hygiene, revert exposure, behavioral robustness). Locked at issuance — re-certification required every 180 days.</p>
+          <div class="cta-row">
+            <button class="btn btn-primary btn-large" id="premiumNextBtn">Get Certified →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============= CERTIFICATION ============= -->
+      <section class="screen cert" id="screen-cert" data-screen="cert">
+        <div class="centered-card">
+          <p class="uppercase-wide muted">certification period</p>
+          <h2 class="big-heading">Your underwriting is valid for 180 days.</h2>
+          <div class="cert-window card-bordered">
+            <div class="cert-window-row">
+              <div>
+                <p class="uppercase-wide muted">issued</p>
+                <p class="mono cert-date" id="certStart">—</p>
+              </div>
+              <div class="cert-arrow mono dim">→</div>
+              <div>
+                <p class="uppercase-wide muted">expires</p>
+                <p class="mono cert-date" id="certEnd">—</p>
+              </div>
+            </div>
+            <p class="cert-warning mono">Re-certification is mandatory before expiry.<br />If not completed, coverage will <b>automatically be cancelled</b>.</p>
+          </div>
+          <div class="cta-row">
+            <button class="btn btn-primary btn-large" id="certNextBtn">Issue NFT Certificate →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============= NFT MINT ============= -->
+      <section class="screen nft" id="screen-nft" data-screen="nft">
+        <div class="nft-stage">
+          <p class="uppercase-wide muted">minting on-chain</p>
+          <h2 class="big-heading">ERC-8004 Trustless-Agents identity certificate</h2>
+
+          <div class="nft-step" id="nftStep1">
+            <p class="uppercase-wide dim">step 1 · canonical hash</p>
+            <pre class="nft-code mono" id="nftHashCode"></pre>
+          </div>
+
+          <div class="nft-step" id="nftStep2" hidden>
+            <p class="uppercase-wide dim">step 2 · contract call</p>
+            <pre class="nft-code mono" id="nftMintCode"></pre>
+            <p class="nft-pending mono" id="nftPending"><span class="spinner" id="nftSpinner"></span> &nbsp; <span id="nftPendingText">Confirming on Sepolia…</span></p>
+          </div>
+
+          <div class="nft-step nft-receipt card-bordered" id="nftStep3" hidden>
+            <div class="nft-receipt-head">
+              <div>
+                <p class="uppercase-wide muted">certificate minted</p>
+                <h3 class="mono" id="nftTokenLine">Token #1</h3>
+              </div>
+              <span class="pill pill-active"><span class="pill-dot"></span>SEPOLIA · CONFIRMED</span>
+            </div>
+            <dl class="nft-meta">
+              <div><dt>contract</dt><dd class="mono trunc" id="nftContract">—</dd></div>
+              <div><dt>tx</dt><dd class="mono trunc"><a id="nftTxLink" target="_blank" rel="noopener">—</a></dd></div>
+              <div><dt>identity hash</dt><dd class="mono trunc" id="nftHashLine">—</dd></div>
+            </dl>
+
+            <div class="nft-mismatch-demo">
+              <button class="btn btn-ghost" id="mismatchToggle">▸ Demo: edit agent → coverage void</button>
+              <div class="mismatch-detail" id="mismatchDetail" hidden>
+                <pre class="mono" id="mismatchPrompt"></pre>
+                <p class="mono dim">current hash <span class="mono" id="mismatchHash">—</span></p>
+              </div>
+            </div>
+
+            <div class="cta-row">
+              <button class="btn btn-primary btn-large" id="nftNextBtn">Enroll in Insurance →</button>
+            </div>
+          </div>
+        </div>
+        <div class="announce-banner" id="announceNft" hidden>
+          <strong>NFT Certificate Issued</strong> — Token #1 minted on Sepolia. Coverage gating now linked to on-chain identity.
+        </div>
+      </section>
+
+      <!-- ============= PAYMENT ============= -->
+      <section class="screen payment" id="screen-payment" data-screen="payment">
+        <div class="payment-wrap">
+          <p class="uppercase-wide muted">enroll · monthly billing</p>
+          <h2 class="big-heading">One last step.</h2>
+          <div class="payment-card card-bordered">
+            <form id="paymentForm" autocomplete="off">
+              <div>
+                <label class="label">card number</label>
+                <input class="input mono" id="payCard" value="4242 4242 4242 4242" />
+              </div>
+              <div class="payment-row">
+                <div>
+                  <label class="label">expiry</label>
+                  <input class="input mono" id="payExpiry" value="12 / 30" />
+                </div>
+                <div>
+                  <label class="label">cvc</label>
+                  <input class="input mono" id="payCvc" value="424" />
+                </div>
+              </div>
+              <div>
+                <label class="label">name on card</label>
+                <input class="input" id="payName" value="GAIP DEMO" />
+              </div>
+              <div class="payment-summary">
+                <span class="muted">due now</span>
+                <span class="mono"><strong>$42.00</strong> USDC / month</span>
+              </div>
+              <button class="btn btn-primary btn-large btn-full" id="payBtn" type="submit">Pay & Activate Coverage</button>
+            </form>
+            <div class="payment-result" id="paymentResult" hidden>
+              <h3 class="mono pill pill-active" style="font-size: 18px; height: auto; padding: 12px 24px;"><span class="pill-dot"></span>COVERAGE ACTIVE</h3>
+              <p class="muted">Policy <span class="mono">#ACE-2026-0001</span> is live. Re-certification due in 180 days.</p>
+              <button class="btn btn-primary btn-large" id="payDoneBtn">View Dashboard →</button>
+            </div>
+          </div>
+        </div>
+        <div class="announce-banner" id="announcePolicy" hidden>
+          <strong>Coverage Active</strong> — Policy #ACE-2026-0001. Re-certify within 180 days or coverage will auto-cancel.
+        </div>
+      </section>
+
+      <!-- ============= TUTORIAL END splash ============= -->
+      <div class="tutorial-end-overlay" id="tutorialEndOverlay" hidden>
+        <h1 class="tutorial-end-heading">TUTORIAL END</h1>
+        <p class="tutorial-end-sub mono muted">you've seen the full underwriting flow.</p>
+        <button class="btn btn-primary btn-large" id="tutorialEndCta">Try it yourself</button>
+      </div>
+
+      <!-- ============= COVERAGE VOID overlay (identity mismatch) ============= -->
+      <div class="void-overlay" id="voidOverlay" hidden>
+        <h1>COVERAGE VOID</h1>
+        <p class="mono">identity hash mismatch — agent declaration has changed since underwriting</p>
+      </div>
+
+      <!-- ============= TUTORIAL cursor ============= -->
+      <div class="tutorial-cursor" id="tutorialCursor" hidden>
+        <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+          <!-- soft drop shadow -->
+          <path d="M 6 4 L 6 26 L 11.5 21 L 15.5 28 L 18.5 27 L 14.5 20 L 22 19 Z"
+                fill="rgba(0,0,0,0.5)" transform="translate(1.2,1.4)" filter="blur(0.6px)"/>
+          <!-- main arrow body -->
+          <path d="M 6 4 L 6 26 L 11.5 21 L 15.5 28 L 18.5 27 L 14.5 20 L 22 19 Z"
+                fill="#fafafa" stroke="#00c573" stroke-width="1.4" stroke-linejoin="round"/>
+          <!-- tip indicator -->
+          <circle cx="6" cy="4" r="2.2" fill="#00c573" opacity="0.55"/>
+        </svg>
+      </div>
+      <div class="tutorial-tooltip" id="tutorialTooltip" hidden>
+        <p class="tooltip-step mono uppercase-wide muted">step <span id="tooltipNum">1</span> / 18</p>
+        <p class="tooltip-body" id="tooltipBody">—</p>
+        <div class="tooltip-actions">
+          <button class="btn btn-ghost" id="tutorialSkipBtn">End tutorial</button>
+          <button class="btn btn-primary" id="tutorialNextBtn">Next →</button>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="footer" id="footer">
+      <span class="mono">I402 · ACE underwriting demo · built on x402</span>
+      &nbsp; · &nbsp;
+      <span class="mono dim">calibrated against Li et al., arXiv:2605.11781</span>
+    </footer>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

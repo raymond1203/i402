@@ -24,7 +24,9 @@ from gate.applicant import (
 )
 
 AGENTS_DIR = Path(__file__).parent
-KNOWN_AGENTS = ("safe_paybot", "mid_paybot", "vuln_paybot")
+# Order matters: micro is the doc §1.4 Case A PASS-path; safe/mid/vuln demonstrate
+# the §8.2 negative finding at progressively higher c_tx.
+KNOWN_AGENTS = ("micro_paybot", "safe_paybot", "mid_paybot", "vuln_paybot")
 
 
 def load_agent(name: str) -> Applicant:
@@ -42,6 +44,7 @@ def load_agent(name: str) -> Applicant:
         facilitator=data["facilitator"],
         endpoint_config=EndpointConfig(**data["endpoint_config"]),
         behavioral_config=BehavioralConfig(**data["behavioral_config"]),
+        annual_tx_count_estimate=int(data.get("annual_tx_count_estimate", 0)),
     )
 
 
