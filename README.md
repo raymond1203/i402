@@ -53,7 +53,8 @@ Every threshold value is taken from the paper (Tables 1, 4, 5). No invented numb
 ### Install
 
 ```bash
-git clone <this-repo> i402
+git clone https://github.com/raymond1203/i402.git
+
 cd i402
 uv sync                                          # installs Python deps into .venv
 (cd contracts && forge install foundry-rs/forge-std --no-commit)
