@@ -1,0 +1,40 @@
+[project]
+name = "i402"
+version = "0.1.0"
+description = "I402 — Simulation-gated insurance underwriting for AI-agent autonomous payments on the x402 protocol, with ERC-8004 NFT certification."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.39.0",
+    "python-dotenv>=1.0.1",
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "aiohttp>=3.10",
+    "eth-account>=0.13",
+    "web3>=7.0",
+    "eth-utils>=4.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.7,<0.15",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = ["E501"]  # long-line policing handled by the formatter
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pytest.ini_options]
+testpaths = ["gate", "agents", "simulator", "behavior_sim", "verdict", "nft"]
+addopts = "-q"
+asyncio_mode = "auto"
