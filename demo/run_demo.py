@@ -1,10 +1,14 @@
-"""Pretty CLI orchestrator — runs the full ACE pipeline on the 3 toy
+"""Pretty CLI orchestrator — runs the full I402 pipeline on the 3 toy
 agents and prints a competition-ready summary.
 
+Default is paper-scale: 5,000 trials per stage, real Claude API for
+Stage 2. Budget roughly $1–$3 per agent in Anthropic credit and
+30–60 minutes of wall clock (free tier rate limits).
+
 Usage:
-    uv run python -m demo.run_demo                       # default (Stage 2 dry-run, small Stage 1 budget)
-    uv run python -m demo.run_demo --n-trials 600        # bigger Stage 1 budget
-    uv run python -m demo.run_demo --real-llm            # call Claude for Stage 2 (needs ANTHROPIC_API_KEY)
+    uv run python -m demo.run_demo                       # 5,000 trials per stage, real Claude calls
+    uv run python -m demo.run_demo --dry-run             # skip Stage 2 LLM calls (CI / debugging)
+    uv run python -m demo.run_demo --n-trials 600        # smaller Stage 1 budget
     uv run python -m demo.run_demo --mutate safe_paybot  # add the "edit prompt → coverage void" demo at the end
 """
 
@@ -86,6 +90,8 @@ async def _run_stage_1(name: str, n_trials: int, seed: int) -> dict:
 
 
 async def _run_stage_2(real_llm: bool, agents: list[str], n_trials: int, seed: int) -> dict:
+    """Stage 2 — behavioural simulator. `real_llm=False` writes a zero-rate
+    placeholder so downstream verdict logic still has the expected shape."""
     if not real_llm:
         from behavior_sim.corpus import CATEGORIES
         from behavior_sim.orchestrator import OUTPUT_KEY
@@ -115,7 +121,10 @@ async def _run_stage_2(real_llm: bool, agents: list[str], n_trials: int, seed: i
 
     api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
     if not api_key or api_key.startswith("<"):
-        raise SystemExit("ANTHROPIC_API_KEY not set. Drop --real-llm or fill .env.")
+        raise SystemExit(
+            "ANTHROPIC_API_KEY not set. Fill .env (see .env.example), "
+            "or pass --dry-run to skip Stage 2 entirely."
+        )
     model = os.environ.get("ANTHROPIC_MODEL_AGENT", "claude-sonnet-4-6")
     judge_model = os.environ.get("ANTHROPIC_MODEL_JUDGE", model)
     # max_retries=8 covers Anthropic's automatic 429 backoff for low-tier accounts.
@@ -232,20 +241,21 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     p.add_argument(
         "--n-trials",
         type=int,
-        default=90,
-        help="Stage 1 trials per agent (default 90 for fast demo; paper-scale = 5000)",
+        default=5000,
+        help="Stage 1 trials per agent (default: 5000 — paper-scale)",
     )
     p.add_argument(
         "--stage-2-trials",
         type=int,
-        default=20,
-        help="Stage 2 trials per agent (per category gets n/5). Only used with --real-llm.",
+        default=5000,
+        help="Stage 2 trials per agent. Real Claude API calls. Budget ~$1–$3 per agent.",
     )
     p.add_argument("--seed", type=int, default=42)
     p.add_argument(
-        "--real-llm",
+        "--dry-run",
         action="store_true",
-        help="Use real Claude API for Stage 2 (default: dry-run)",
+        help="Skip Stage 2 LLM calls (Stage 1 still runs at full scale). "
+             "Use for CI / fast iteration / debugging without spending API budget.",
     )
     p.add_argument(
         "--mutate",
@@ -262,7 +272,7 @@ async def _main_async(args: argparse.Namespace) -> int:
     _header("ACE — Agentic Commerce Endorsement (demo)")
     print(
         f"  trial budget:    Stage 1 = {args.n_trials}  "
-        f"Stage 2 = {'real Claude × ' + str(args.stage_2_trials) if args.real_llm else 'DRY-RUN (0)'}"
+        f"Stage 2 = {'DRY-RUN (0)' if args.dry_run else 'real Claude × ' + str(args.stage_2_trials)}"
     )
     print(f"  seed:            {args.seed}")
     print(f"  agents:          {', '.join(args.agents)}")
@@ -296,7 +306,7 @@ async def _main_async(args: argparse.Namespace) -> int:
     _subheader(
         "Stage 2  behavioral simulator  (server-selection / prompt-injection / tool-poisoning / confused-deputy)"
     )
-    stage_2_all = await _run_stage_2(args.real_llm, passers, args.stage_2_trials, args.seed)
+    stage_2_all = await _run_stage_2(not args.dry_run, passers, args.stage_2_trials, args.seed)
     for name in passers:
         _print_stage_2_row(name, stage_2_all[name])
 

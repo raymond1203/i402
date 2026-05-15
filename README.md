@@ -86,23 +86,39 @@ uv run python -m nft.deploy
 
 Outputs the deployed contract address. Paste it into `.env` under `ACE_IDENTITY_CONTRACT_ADDRESS`.
 
-### Run the full pipeline on a sample agent
+### Run the full pipeline
 
 ```bash
-uv run python -m demo.run_demo agents/safe_paybot.json
+uv run python -m demo.run_demo
 ```
 
-This will, in order:
+**Default is paper-scale.** Each invocation will:
 1. Run the Stage 0 gate (instant)
-2. Run Stage 1 protocol simulator — 5,000 aiohttp trials (~30s)
-3. Run Stage 2 behavioral simulator — 5,000 Claude calls (~30–60 min, governed by Anthropic rate limits)
+2. Run Stage 1 protocol simulator — **5,000 aiohttp trials per agent** (~30s)
+3. Run Stage 2 behavioural simulator — **5,000 real Claude API calls per agent** (~30–60 min on free-tier rate limits; **budget ~$1–$3 per agent in Anthropic credit**)
 4. Compute the Stage 3 verdict
-5. If `PASS`: compute `identity_hash`, call `mintCertificate(...)` on Sepolia, broadcast the tx, wait for finality, write the receipt to `reports/<agent>_registration.json`
+5. Print a mint hint for any passing agent. Mint is a separate, deliberate step: `uv run python -m nft.mint safe_paybot` (calls `mintCertificate(...)` on Sepolia, broadcasts the tx, waits for finality, writes the receipt to `reports/<agent>_registration.json`)
+
+**Fast iteration without spending API budget:**
+
+```bash
+uv run python -m demo.run_demo --dry-run                 # skip Stage 2 LLM calls entirely
+uv run python -m demo.run_demo --n-trials 200            # smaller Stage 1 budget
+```
+
+**Reproduce paper-scale runs from a clean state** (also seeded):
+
+```bash
+bash run_all.sh                                          # N_TRIALS=5000 by default
+```
 
 ### Bring your own agent
 
+Drop your file into `agents/`, add its name to the `--agents` flag:
+
 ```bash
-uv run python -m demo.run_demo path/to/my_agent.json
+cp path/to/my_agent.json agents/
+uv run python -m demo.run_demo --agents my_agent
 ```
 
 Schema: see [`agents/safe_paybot.json`](agents/safe_paybot.json) for a complete annotated example. Required top‑level fields:
